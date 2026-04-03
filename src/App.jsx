@@ -213,14 +213,14 @@ function Results({ scores, onRetake }) {
 
   return (
     <div style={{
-      minHeight: "100dvh", padding: "48px 20px 80px",
+      minHeight: "100dvh", padding: "24px 16px 60px",
       opacity: visible ? 1 : 0, transition: "opacity 0.5s ease",
     }}>
       <div style={{ maxWidth: 480, margin: "0 auto" }}>
 
         {/* ===== SCORE CARD ===== */}
         <div ref={cardRef} style={{
-          background: "#1A1A1A", borderRadius: 16, padding: "36px 28px 28px",
+          background: "#1A1A1A", borderRadius: 16, padding: "32px 24px 20px",
           border: "1px solid #2A2A2A",
         }}>
           <p style={{
@@ -230,7 +230,7 @@ function Results({ scores, onRetake }) {
           }}>Gone Tomorrow</p>
           <p style={{
             fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 400,
-            color: "#D5D0CB", margin: "0 0 32px 0", lineHeight: 1.45,
+            color: "#D5D0CB", margin: "0 0 28px 0", lineHeight: 1.45,
           }}>Could your family access everything without you?</p>
 
           {/* Score */}
@@ -257,18 +257,42 @@ function Results({ scores, onRetake }) {
           }}>{tier.desc}</p>
 
           <div style={{
-            paddingTop: 20, marginTop: 8,
+            paddingTop: 16, marginTop: 4, borderTop: "1px solid #2A2A2A",
+            display: "flex", justifyContent: "space-between", alignItems: "center",
           }}>
             <span style={{
-              fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 500,
+              fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 500,
               color: "#E8A838", letterSpacing: "0.01em",
             }}>gonetomorrow.fyi</span>
+            <a href="https://ente.com/locker/?ref=gonetomorrow" target="_blank" rel="noopener noreferrer"
+              style={{
+                fontFamily: "'Outfit', sans-serif", fontSize: 12, color: "#7A7570",
+                textDecoration: "none", letterSpacing: "0.03em",
+                transition: "color 0.2s ease",
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = "#B0A8A0"}
+              onMouseLeave={e => e.currentTarget.style.color = "#7A7570"}
+            >Toy by <span style={{ fontWeight: 600 }}>Ente</span></a>
           </div>
         </div>
 
+        {/* ===== SHARE CTA (immediately after card) ===== */}
+        <button onClick={handleShare} style={{
+          fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
+          color: "#1A1A1A", background: "#E8A838", border: "none",
+          padding: "14px 24px", borderRadius: 10, cursor: "pointer",
+          width: "100%", marginTop: 20,
+          transition: "background 0.2s, transform 0.1s",
+        }}
+          onMouseEnter={e => e.target.style.background = "#F0B848"}
+          onMouseLeave={e => e.target.style.background = "#E8A838"}
+          onTouchStart={e => e.target.style.transform = "scale(0.98)"}
+          onTouchEnd={e => e.target.style.transform = "scale(1)"}
+        >Share your results</button>
+
         {/* ===== BREAKDOWN ===== */}
         {weakQs.length > 0 ? (
-          <div style={{ marginTop: 40 }}>
+          <div style={{ marginTop: 36 }}>
             <h3 style={{
               fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600,
               color: "#F5F0EB", margin: "0 0 12px 0",
@@ -291,7 +315,7 @@ function Results({ scores, onRetake }) {
           </div>
         ) : (
           <div style={{
-            marginTop: 40, background: "#161616", border: "1px solid #222",
+            marginTop: 36, background: "#161616", border: "1px solid #222",
             borderRadius: 12, padding: "24px", borderLeft: "3px solid #6BCB77",
           }}>
             <p style={{
@@ -304,20 +328,8 @@ function Results({ scores, onRetake }) {
           </div>
         )}
 
-        {/* ===== ACTIONS ===== */}
-        <div style={{
-          display: "flex", gap: 16, justifyContent: "center", marginTop: 36,
-        }}>
-          <button onClick={handleShare} style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 500,
-            color: "#E8A838", background: "transparent", border: "1px solid #2A2A2A",
-            padding: "10px 20px", borderRadius: 8, cursor: "pointer",
-            transition: "border-color 0.2s",
-          }}
-            onMouseEnter={e => e.target.style.borderColor = "#E8A838"}
-            onMouseLeave={e => e.target.style.borderColor = "#2A2A2A"}
-          >Share your results</button>
-
+        {/* ===== RETAKE ===== */}
+        <div style={{ textAlign: "center", marginTop: 28 }}>
           <button onClick={onRetake} style={{
             fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 400,
             color: "#6A6560", background: "transparent", border: "none",
@@ -325,18 +337,6 @@ function Results({ scores, onRetake }) {
             textUnderlineOffset: 3,
           }}>Retake</button>
         </div>
-
-        {/* ===== TOY BY ENTE ===== */}
-        <a href="https://ente.com/locker/?ref=gonetomorrow" target="_blank" rel="noopener noreferrer"
-          style={{
-            display: "block", textAlign: "center", marginTop: 56,
-            fontFamily: "'Outfit', sans-serif", fontSize: 12, color: "#5A5550",
-            textDecoration: "none", letterSpacing: "0.03em",
-            transition: "color 0.2s ease",
-          }}
-          onMouseEnter={e => e.target.style.color = "#9A9590"}
-          onMouseLeave={e => e.target.style.color = "#5A5550"}
-        >Toy by <span style={{ fontWeight: 600 }}>Ente</span></a>
       </div>
     </div>
   );
