@@ -226,36 +226,10 @@ function Quiz({ onComplete }) {
   );
 }
 
-// Score bar with fill animation
-function ScoreBar({ score, color, animate }) {
-  const pct = Math.round((score / 12) * 100);
-  const [width, setWidth] = useState(0);
-  useEffect(() => {
-    if (animate) {
-      const t = setTimeout(() => setWidth(pct), 100);
-      return () => clearTimeout(t);
-    } else {
-      setWidth(pct);
-    }
-  }, [pct, animate]);
-
-  return (
-    <div style={{
-      width: "100%", height: 10, background: "#2A2A2A", borderRadius: 5, overflow: "hidden",
-    }}>
-      <div style={{
-        width: `${width}%`, height: "100%", background: color,
-        borderRadius: 5, transition: animate ? "width 1s cubic-bezier(0.22, 1, 0.36, 1)" : "none",
-      }} />
-    </div>
-  );
-}
-
 // Results screen
 function Results({ scores, onRetake }) {
   const total = scores.reduce((a, b) => a + b, 0);
   const tier = getTier(total);
-  const riskAreas = scores.filter(s => s === 0).length;
   const weakQs = scores.map((s, i) => s === 0 ? i : -1).filter(i => i >= 0);
   const [visible, setVisible] = useState(false);
   const cardRef = useRef(null);
@@ -306,7 +280,7 @@ function Results({ scores, onRetake }) {
 
         {/* ===== SCORE CARD ===== */}
         <div ref={cardRef} style={{
-          background: "#1A1A1A", borderRadius: 16, padding: "32px 24px 20px",
+          background: "#1A1A1A", borderRadius: 16, padding: "24px 24px 16px",
           border: "1px solid #2A2A2A",
         }}>
           <p style={{
@@ -316,11 +290,11 @@ function Results({ scores, onRetake }) {
           }}>Gone Tomorrow</p>
           <p style={{
             fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 400,
-            color: "#D5D0CB", margin: "0 0 28px 0", lineHeight: 1.45,
+            color: "#D5D0CB", margin: "0 0 14px 0", lineHeight: 1.45,
           }}>Could your family access everything without you?</p>
 
           {/* Score */}
-          <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 10 }}>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
             <span style={{
               fontFamily: "'Playfair Display', serif", fontSize: "clamp(72px, 18vw, 96px)", fontWeight: 700,
               color: tier.color, lineHeight: 1,
@@ -331,19 +305,17 @@ function Results({ scores, onRetake }) {
             }}>/12</span>
           </div>
 
-          <ScoreBar score={total} color={tier.color} animate={true} />
-
           <p style={{
             fontFamily: "'Outfit', sans-serif", fontSize: 18, fontWeight: 600,
-            color: tier.color, margin: "20px 0 4px 0",
+            color: tier.color, margin: "14px 0 4px 0",
           }}>{tier.label}</p>
           <p style={{
             fontFamily: "'Outfit', sans-serif", fontSize: 14, color: "#9A9590",
-            margin: "0 0 20px 0", lineHeight: 1.5,
+            margin: "0 0 14px 0", lineHeight: 1.5,
           }}>{tier.desc}</p>
 
           <div style={{
-            paddingTop: 16, marginTop: 4, borderTop: "1px solid #2A2A2A",
+            paddingTop: 12, marginTop: 0, borderTop: "1px solid #2A2A2A",
             display: "flex", justifyContent: "space-between", alignItems: "center",
           }}>
             <span style={{
@@ -389,7 +361,7 @@ function Results({ scores, onRetake }) {
                 <div key={qi} style={{
                   background: "#161616", border: "1px solid #222",
                   borderRadius: 6, padding: "8px 12px",
-                  borderLeft: "3px solid " + tier.color,
+                  borderLeft: "3px solid #9A9590",
                 }}>
                   <p style={{
                     fontFamily: "'Outfit', sans-serif", fontSize: 13, color: "#D5D0CB",
@@ -403,7 +375,7 @@ function Results({ scores, onRetake }) {
         ) : (
           <div style={{
             marginTop: 36, background: "#161616", border: "1px solid #222",
-            borderRadius: 12, padding: "24px", borderLeft: "3px solid #6BCB77",
+            borderRadius: 12, padding: "24px", borderLeft: "3px solid #9A9590",
           }}>
             <p style={{
               fontFamily: "'Outfit', sans-serif", fontSize: 15, color: "#D5D0CB",
