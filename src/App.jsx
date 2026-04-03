@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import html2canvas from "html2canvas";
 
 const QUESTIONS = [
   { question: "Could your family log into your bank accounts and pay next month's rent?", weakInsight: "Your family could lose access to money when they need it most." },
@@ -197,17 +198,37 @@ function Results({ scores, onRetake }) {
 
   useEffect(() => { requestAnimationFrame(() => setVisible(true)); }, []);
 
+  const [sharing, setSharing] = useState(false);
+
   const handleShare = async () => {
-    const url = "https://gonetomorrow.fyi";
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "Gone Tomorrow", text: `I scored ${total}/12 on the Gone Tomorrow test. "${tier.label}" — ${tier.desc}`, url });
-      } catch {}
-    } else {
-      try {
-        await navigator.clipboard.writeText(`I scored ${total}/12 on the Gone Tomorrow test. "${tier.label}" — ${tier.desc}\n${url}`);
-        alert("Copied to clipboard!");
-      } catch {}
+    if (!cardRef.current || sharing) return;
+    setSharing(true);
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        backgroundColor: "#0F0F0F",
+        scale: 2,
+        useCORS: true,
+      });
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+      const file = new File([blob], "gone-tomorrow-score.png", { type: "image/png" });
+
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "Gone Tomorrow",
+          text: `I scored ${total}/12 — "${tier.label}"\ngonetomorrow.fyi`,
+        });
+      } else {
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "gone-tomorrow-score.png";
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+    } catch (e) {
+      if (e.name !== "AbortError") console.error("Share failed:", e);
+    } finally {
+      setSharing(false);
     }
   };
 
@@ -277,18 +298,19 @@ function Results({ scores, onRetake }) {
         </div>
 
         {/* ===== SHARE CTA (immediately after card) ===== */}
-        <button onClick={handleShare} style={{
+        <button onClick={handleShare} disabled={sharing} style={{
           fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
-          color: "#1A1A1A", background: "#E8A838", border: "none",
-          padding: "14px 24px", borderRadius: 10, cursor: "pointer",
+          color: "#1A1A1A", background: sharing ? "#C49030" : "#E8A838", border: "none",
+          padding: "14px 24px", borderRadius: 10, cursor: sharing ? "wait" : "pointer",
           width: "100%", marginTop: 20,
           transition: "background 0.2s, transform 0.1s",
+          opacity: sharing ? 0.8 : 1,
         }}
-          onMouseEnter={e => e.target.style.background = "#F0B848"}
-          onMouseLeave={e => e.target.style.background = "#E8A838"}
+          onMouseEnter={e => { if (!sharing) e.target.style.background = "#F0B848"; }}
+          onMouseLeave={e => { if (!sharing) e.target.style.background = "#E8A838"; }}
           onTouchStart={e => e.target.style.transform = "scale(0.98)"}
           onTouchEnd={e => e.target.style.transform = "scale(1)"}
-        >Share your results</button>
+        >{sharing ? "Generating..." : "Share"}</button>
 
         {/* ===== BREAKDOWN ===== */}
         {weakQs.length > 0 ? (
