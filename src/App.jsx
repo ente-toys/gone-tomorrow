@@ -257,7 +257,7 @@ function Results({ scores, onRetake }) {
           }}>{tier.desc}</p>
 
           <div style={{
-            borderTop: "1px solid #2A2A2A", paddingTop: 20, marginTop: 8,
+            paddingTop: 20, marginTop: 8,
           }}>
             <span style={{
               fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 500,
