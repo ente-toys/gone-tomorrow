@@ -90,6 +90,14 @@ function Quiz({ onComplete }) {
   const [current, setCurrent] = useState(0);
   const [scores, setScores] = useState([]);
   const [flash, setFlash] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia("(max-width: 768px)").matches);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const onChange = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const handleAnswer = (pts) => {
     const newScores = [...scores, pts];
@@ -113,14 +121,69 @@ function Quiz({ onComplete }) {
     border: "1px solid #2A2A2A",
   };
 
+  const buttons = (
+    <div style={{ display: "flex", gap: 14 }}>
+      <button onClick={() => handleAnswer(1)} style={btnStyle}
+        onMouseEnter={e => { e.target.style.borderColor = "#3A3A3A"; e.target.style.background = "#222"; }}
+        onMouseLeave={e => { e.target.style.borderColor = "#2A2A2A"; e.target.style.background = "#1A1A1A"; }}
+      >Yes</button>
+      <button onClick={() => handleAnswer(0)} style={btnStyle}
+        onMouseEnter={e => { e.target.style.borderColor = "#3A3A3A"; e.target.style.background = "#222"; }}
+        onMouseLeave={e => { e.target.style.borderColor = "#2A2A2A"; e.target.style.background = "#1A1A1A"; }}
+      >Not really</button>
+    </div>
+  );
+
+  if (!isMobile) {
+    // Desktop/tablet: everything centered together, original layout
+    return (
+      <div style={{
+        minHeight: "100dvh", display: "flex", flexDirection: "column",
+        justifyContent: "center", padding: "40px 24px",
+      }}>
+        <div style={{
+          display: "flex", gap: 6, justifyContent: "center", marginBottom: 48, flexWrap: "wrap",
+        }}>
+          {QUESTIONS.map((_, i) => (
+            <div key={i} style={{
+              width: 8, height: 8, borderRadius: "50%",
+              background: i <= current ? "#E8A838" : "#2A2A2A",
+              transition: "background 0.3s ease",
+            }} />
+          ))}
+        </div>
+
+        <div style={{
+          maxWidth: 520, margin: "0 auto", width: "100%",
+          opacity: flash ? 0.6 : 1, transition: "opacity 80ms ease",
+        }}>
+          <p style={{
+            fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 500,
+            color: "#5A5550", letterSpacing: "0.1em", textTransform: "uppercase",
+            marginBottom: 16, textAlign: "center",
+          }}>Question {current + 1} of 12</p>
+
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif", fontSize: "clamp(20px, 5vw, 26px)",
+            fontWeight: 600, color: "#F5F0EB", lineHeight: 1.35,
+            textAlign: "center", margin: "0 0 36px 0",
+          }}>{q.question}</h2>
+
+          {buttons}
+        </div>
+      </div>
+    );
+  }
+
+  // Mobile: question centered, buttons pinned to bottom
   return (
     <div style={{
       minHeight: "100dvh", display: "flex", flexDirection: "column",
-      justifyContent: "center", padding: "40px 24px",
+      padding: "40px 24px",
     }}>
-      {/* Dot indicator */}
       <div style={{
-        display: "flex", gap: 6, justifyContent: "center", marginBottom: 48, flexWrap: "wrap",
+        display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap",
+        paddingTop: "env(safe-area-inset-top, 0px)",
       }}>
         {QUESTIONS.map((_, i) => (
           <div key={i} style={{
@@ -132,31 +195,32 @@ function Quiz({ onComplete }) {
       </div>
 
       <div style={{
+        flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
+      }}>
+        <div style={{
+          maxWidth: 520, width: "100%",
+          opacity: flash ? 0.6 : 1, transition: "opacity 80ms ease",
+        }}>
+          <p style={{
+            fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 500,
+            color: "#5A5550", letterSpacing: "0.1em", textTransform: "uppercase",
+            marginBottom: 16, textAlign: "center",
+          }}>Question {current + 1} of 12</p>
+
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif", fontSize: "clamp(20px, 5vw, 26px)",
+            fontWeight: 600, color: "#F5F0EB", lineHeight: 1.35,
+            textAlign: "center", margin: 0,
+          }}>{q.question}</h2>
+        </div>
+      </div>
+
+      <div style={{
         maxWidth: 520, margin: "0 auto", width: "100%",
+        paddingBottom: "env(safe-area-inset-bottom, 0px)",
         opacity: flash ? 0.6 : 1, transition: "opacity 80ms ease",
       }}>
-        <p style={{
-          fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 500,
-          color: "#5A5550", letterSpacing: "0.1em", textTransform: "uppercase",
-          marginBottom: 16, textAlign: "center",
-        }}>Question {current + 1} of 12</p>
-
-        <h2 style={{
-          fontFamily: "'Playfair Display', serif", fontSize: "clamp(20px, 5vw, 26px)",
-          fontWeight: 600, color: "#F5F0EB", lineHeight: 1.35,
-          textAlign: "center", margin: "0 0 36px 0",
-        }}>{q.question}</h2>
-
-        <div style={{ display: "flex", gap: 14 }}>
-          <button onClick={() => handleAnswer(1)} style={btnStyle}
-            onMouseEnter={e => { e.target.style.borderColor = "#3A3A3A"; e.target.style.background = "#222"; }}
-            onMouseLeave={e => { e.target.style.borderColor = "#2A2A2A"; e.target.style.background = "#1A1A1A"; }}
-          >Yes</button>
-          <button onClick={() => handleAnswer(0)} style={btnStyle}
-            onMouseEnter={e => { e.target.style.borderColor = "#3A3A3A"; e.target.style.background = "#222"; }}
-            onMouseLeave={e => { e.target.style.borderColor = "#2A2A2A"; e.target.style.background = "#1A1A1A"; }}
-          >Not really</button>
-        </div>
+        {buttons}
       </div>
     </div>
   );
