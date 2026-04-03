@@ -198,7 +198,7 @@ function Results({ scores, onRetake }) {
   useEffect(() => { requestAnimationFrame(() => setVisible(true)); }, []);
 
   const handleShare = async () => {
-    const url = "https://gonetomorrow.com";
+    const url = "https://gonetomorrow.fyi";
     if (navigator.share) {
       try {
         await navigator.share({ title: "Gone Tomorrow", text: `I scored ${total}/12 on the Gone Tomorrow test. "${tier.label}" — ${tier.desc}`, url });
@@ -262,7 +262,7 @@ function Results({ scores, onRetake }) {
             <span style={{
               fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 500,
               color: "#E8A838", letterSpacing: "0.01em",
-            }}>gonetomorrow.com</span>
+            }}>gonetomorrow.fyi</span>
           </div>
         </div>
 
