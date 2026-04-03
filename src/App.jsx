@@ -298,10 +298,11 @@ function Results({ scores, onRetake }) {
 
   return (
     <div style={{
-      minHeight: "100dvh", padding: "24px 16px 60px",
+      minHeight: "100dvh", display: "flex", flexDirection: "column",
+      justifyContent: "center", padding: "24px 16px 60px",
       opacity: visible ? 1 : 0, transition: "opacity 0.5s ease",
     }}>
-      <div style={{ maxWidth: 480, margin: "0 auto" }}>
+      <div style={{ maxWidth: 480, margin: "0 auto", width: "100%" }}>
 
         {/* ===== SCORE CARD ===== */}
         <div ref={cardRef} style={{
