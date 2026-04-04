@@ -360,17 +360,6 @@ function Results({ scores, onRetake }) {
             margin: "0 0 14px 0", lineHeight: 1.5,
           }}>{tier.desc}</p>
 
-          <p style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 13, color: "#9A9590",
-            margin: "0 0 14px 0", lineHeight: 1.5,
-            fontStyle: weakQs.length === 0 ? "italic" : "normal",
-          }}>
-            {weakQs.length === 0
-              ? "You've done the work most people haven't. Your family would have access, information, and a clear path forward. That's rare — and it matters."
-              : `${weakQs.length} gap${weakQs.length !== 1 ? "s" : ""} — ${QUESTIONS[weakQs[0]].weakInsight}`
-            }
-          </p>
-
           <div style={{
             paddingTop: 12, marginTop: 0, borderTop: "1px solid #2A2A2A",
             display: "flex", justifyContent: "space-between", alignItems: "center",
