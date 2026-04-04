@@ -23,6 +23,13 @@ function getTier(score) {
   return { label: "They'd be starting over", color: "#D95555", desc: "Almost everything your family needs is locked in your head." };
 }
 
+function getShareCopy(score) {
+  if (score <= 3) return `Just got ${score}/12 on this. Brutal. gonetomorrow.fyi`;
+  if (score <= 7) return `Got ${score}/12 on this. More gaps than I expected. gonetomorrow.fyi`;
+  if (score <= 10) return `Scored ${score}/12. Curious where you'd land. gonetomorrow.fyi`;
+  return `Got ${score}/12 on this. Curious where you'd land. gonetomorrow.fyi`;
+}
+
 const FONTS_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap');
 `;
@@ -237,25 +244,27 @@ function Results({ scores, onRetake }) {
   useEffect(() => { requestAnimationFrame(() => setVisible(true)); }, []);
 
   const [sharing, setSharing] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const renderCard = async () => {
+    const canvas = await html2canvas(cardRef.current, {
+      backgroundColor: "#0F0F0F",
+      scale: 2,
+      useCORS: true,
+    });
+    return new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+  };
 
   const handleShare = async () => {
     if (!cardRef.current || sharing) return;
     setSharing(true);
     try {
-      const canvas = await html2canvas(cardRef.current, {
-        backgroundColor: "#0F0F0F",
-        scale: 2,
-        useCORS: true,
-      });
-      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/png"));
+      const blob = await renderCard();
       const file = new File([blob], "gone-tomorrow-score.png", { type: "image/png" });
 
       if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: "Gone Tomorrow",
-          text: `I scored ${total}/12 — "${tier.label}"\ngonetomorrow.fyi`,
-        });
+        await navigator.share({ files: [file] });
       } else {
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
@@ -267,6 +276,28 @@ function Results({ scores, onRetake }) {
       if (e.name !== "AbortError") console.error("Share failed:", e);
     } finally {
       setSharing(false);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!cardRef.current || sending) return;
+    setSending(true);
+    try {
+      const blob = await renderCard();
+      const file = new File([blob], "gone-tomorrow.png", { type: "image/png" });
+      const text = getShareCopy(total);
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ text, files: [file] });
+      } else {
+        await navigator.clipboard.writeText(text);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      }
+    } catch (e) {
+      if (e.name !== "AbortError") console.error("Send failed:", e);
+    } finally {
+      setSending(false);
     }
   };
 
@@ -314,6 +345,17 @@ function Results({ scores, onRetake }) {
             margin: "0 0 14px 0", lineHeight: 1.5,
           }}>{tier.desc}</p>
 
+          <p style={{
+            fontFamily: "'Outfit', sans-serif", fontSize: 13, color: "#9A9590",
+            margin: "0 0 14px 0", lineHeight: 1.5,
+            fontStyle: weakQs.length === 0 ? "italic" : "normal",
+          }}>
+            {weakQs.length === 0
+              ? "You've done the work most people haven't. Your family would have access, information, and a clear path forward. That's rare — and it matters."
+              : `${weakQs.length} gap${weakQs.length !== 1 ? "s" : ""} — ${QUESTIONS[weakQs[0]].weakInsight}`
+            }
+          </p>
+
           <div style={{
             paddingTop: 12, marginTop: 0, borderTop: "1px solid #2A2A2A",
             display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -334,20 +376,38 @@ function Results({ scores, onRetake }) {
           </div>
         </div>
 
-        {/* ===== SHARE CTA (immediately after card) ===== */}
-        <button onClick={handleShare} disabled={sharing} style={{
-          fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
-          color: "#1A1A1A", background: sharing ? "#C49030" : "#E8A838", border: "none",
-          padding: "14px 24px", borderRadius: 10, cursor: sharing ? "wait" : "pointer",
-          width: "100%", marginTop: 20,
-          transition: "background 0.2s, transform 0.1s",
-          opacity: sharing ? 0.8 : 1,
-        }}
-          onMouseEnter={e => { if (!sharing) e.target.style.background = "#F0B848"; }}
-          onMouseLeave={e => { if (!sharing) e.target.style.background = "#E8A838"; }}
-          onTouchStart={e => e.target.style.transform = "scale(0.98)"}
-          onTouchEnd={e => e.target.style.transform = "scale(1)"}
-        >{sharing ? "Generating..." : "Share"}</button>
+        {/* ===== SHARE BUTTONS ===== */}
+        <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+          <button onClick={handleShare} disabled={sharing} style={{
+            fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
+            color: "#1A1A1A", background: sharing ? "#C49030" : "#E8A838",
+            border: "none", padding: "14px 24px", borderRadius: 10,
+            cursor: sharing ? "wait" : "pointer", flex: 1,
+            transition: "background 0.2s, transform 0.1s",
+            opacity: sharing ? 0.8 : 1,
+          }}
+            onMouseEnter={e => { if (!sharing) e.target.style.background = "#F0B848"; }}
+            onMouseLeave={e => { if (!sharing) e.target.style.background = "#E8A838"; }}
+            onTouchStart={e => e.target.style.transform = "scale(0.98)"}
+            onTouchEnd={e => e.target.style.transform = "scale(1)"}
+          >{sharing ? "Generating..." : "Share card"}</button>
+
+          <button onClick={handleSend} disabled={sending} style={{
+            fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
+            color: copied ? "#6BCB77" : "#E8A838",
+            background: "transparent",
+            border: `1.5px solid ${copied ? "#6BCB77" : "#E8A838"}`,
+            padding: "14px 24px", borderRadius: 10,
+            cursor: sending ? "wait" : "pointer", flex: 1,
+            transition: "all 0.2s, transform 0.1s",
+            opacity: sending ? 0.8 : 1,
+          }}
+            onMouseEnter={e => { if (!sending && !copied) { e.target.style.background = "rgba(232,168,56,0.1)"; } }}
+            onMouseLeave={e => { if (!sending) e.target.style.background = "transparent"; }}
+            onTouchStart={e => e.target.style.transform = "scale(0.98)"}
+            onTouchEnd={e => e.target.style.transform = "scale(1)"}
+          >{copied ? "Copied!" : sending ? "Generating..." : "Send to someone"}</button>
+        </div>
 
         {/* ===== BREAKDOWN ===== */}
         {weakQs.length > 0 ? (
