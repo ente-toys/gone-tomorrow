@@ -596,7 +596,7 @@ export default function GoneTomorrow() {
   return (
     <>
       <style>{FONTS_CSS}{`
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: #0F0F0F; -webkit-font-smoothing: antialiased; }
       `}</style>
       <div style={{ background: "#0F0F0F", minHeight: "100dvh", color: "#F5F0EB" }}>
