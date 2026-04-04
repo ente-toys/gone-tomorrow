@@ -550,10 +550,9 @@ function Results({ scores, onRetake }) {
       )}
 
       {/* ===== WHY WE BUILT THIS (never in PNG) ===== */}
+      <div style={{ width: 60, height: 1, background: "#2A2A2A", margin: "32px auto 0" }} />
       <div style={{
-        marginTop: 32,
         paddingTop: 24,
-        borderTop: "1px solid #1A1A1A",
         width: "100%",
         maxWidth: 400,
       }}>
