@@ -65,7 +65,7 @@ function Landing({ onStart }) {
           fontFamily: "'Outfit', sans-serif", fontSize: 17, color: "#9A9590",
           lineHeight: 1.6, margin: "0 0 48px 0",
         }}>
-          12 questions. 90 seconds. Find the gaps before they matter.
+          12 questions. 1 minute. Find the gaps before they matter.
         </p>
 
         <button onClick={onStart} style={{
