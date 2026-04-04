@@ -327,7 +327,7 @@ function Results({ scores, onRetake }) {
     border: "1px solid #2A2A2A",
     borderRadius: 8,
     padding: 12,
-    fontSize: 14,
+    fontSize: 15,
     color: "#F5F0EB",
     fontWeight: 500,
     cursor: "pointer",
@@ -444,7 +444,7 @@ function Results({ scores, onRetake }) {
               border: "none",
               cursor: "pointer",
               fontFamily: "'Outfit', sans-serif",
-              fontSize: 13,
+              fontSize: 14,
               color: "#5A5550",
               marginTop: 14,
               padding: 0,
@@ -491,7 +491,7 @@ function Results({ scores, onRetake }) {
                 }}>
                   <p style={{
                     fontFamily: "'Outfit', sans-serif",
-                    fontSize: 11,
+                    fontSize: 12,
                     letterSpacing: 2,
                     textTransform: "uppercase",
                     color: "#6A6560",
@@ -517,7 +517,7 @@ function Results({ scores, onRetake }) {
                       <span style={{ color: tier.color, fontSize: 8, flexShrink: 0, marginTop: 4 }}>●</span>
                       <span style={{
                         fontFamily: "'Outfit', sans-serif",
-                        fontSize: 14,
+                        fontSize: 15,
                         color: "#D5D0CB",
                         lineHeight: 1.4,
                       }}>{QUESTIONS[qi].weakInsight}</span>
@@ -539,7 +539,7 @@ function Results({ scores, onRetake }) {
       }}>
         <p style={{
           fontFamily: "'Playfair Display', serif",
-          fontSize: 18,
+          fontSize: 19,
           color: "#F5F0EB",
           margin: "0 0 8px",
           lineHeight: 1.4,
@@ -548,7 +548,7 @@ function Results({ scores, onRetake }) {
           Why we built this
         </p>
         <p style={{
-          fontSize: 13,
+          fontSize: 14,
           color: "#9A9590",
           textAlign: "center",
           margin: 0,
@@ -556,7 +556,7 @@ function Results({ scores, onRetake }) {
         }}>
           We kept hearing the same story — someone passes away and their family spends months just trying to find the passwords, the policies, the paperwork. It shouldn't be that way. So we built Ente Locker — a safe space for your most important documents, with a way to pass them on automatically in an emergency.
         </p>
-        <p style={{ textAlign: "center", margin: "12px 0 0", fontSize: 13 }}>
+        <p style={{ textAlign: "center", margin: "12px 0 0", fontSize: 14 }}>
           <a
             href="https://ente.com/locker/?ref=gonetomorrow"
             target="_blank"
@@ -575,7 +575,7 @@ function Results({ scores, onRetake }) {
         <button onClick={onRetake} style={{
           background: "none",
           border: "none",
-          fontSize: 13,
+          fontSize: 14,
           color: "#5A5550",
           cursor: "pointer",
           fontFamily: "'Outfit', sans-serif",
