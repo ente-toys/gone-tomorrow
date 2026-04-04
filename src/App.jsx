@@ -32,13 +32,6 @@ function getTier(score) {
   return { label: "They'd be starting over", color: "#D95555", desc: "Almost everything would be lost with you." };
 }
 
-function getShareCopy(score) {
-  if (score <= 3) return `Just got ${score}/12 on this. Brutal. gonetomorrow.fyi`;
-  if (score <= 7) return `Got ${score}/12 on this. More gaps than I expected. gonetomorrow.fyi`;
-  if (score <= 10) return `Scored ${score}/12. Curious where you'd land. gonetomorrow.fyi`;
-  return `Got ${score}/12 on this. Curious where you'd land. gonetomorrow.fyi`;
-}
-
 const FONTS_CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap');
 `;
@@ -272,7 +265,6 @@ function Results({ scores, onRetake }) {
 
   const [sharing, setSharing] = useState(false);
   const [sending, setSending] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [gapsOpen, setGapsOpen] = useState(false);
 
   const renderCard = async () => {
@@ -320,15 +312,8 @@ function Results({ scores, onRetake }) {
     try {
       const blob = await renderCard();
       const file = new File([blob], "gone-tomorrow.png", { type: "image/png" });
-      const text = getShareCopy(total);
 
-      if (navigator.canShare && navigator.canShare({ files: [file] })) {
-        await navigator.share({ text, files: [file] });
-      } else {
-        await navigator.clipboard.writeText(text);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      }
+      await navigator.share({ text: "check yours gonetomorrow.fyi", files: [file] });
     } catch (e) {
       if (e.name !== "AbortError") console.error("Send failed:", e);
     } finally {
@@ -438,19 +423,15 @@ function Results({ scores, onRetake }) {
           onTouchStart={e => { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; }}
           onTouchEnd={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
           onTouchCancel={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
-        >Share card</button>
-        <button onClick={handleSend} disabled={sending} style={{
+        >Download card</button>
+        {isMobile && <button onClick={handleSend} disabled={sending} style={{
           ...shareBtnStyle,
-          color: copied ? "#6BCB77" : "#F5F0EB",
-          borderColor: copied ? "#6BCB77" : "#2A2A2A",
           cursor: sending ? "wait" : "pointer",
         }}
-          onMouseEnter={e => { if (!copied) { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; } }}
-          onMouseLeave={e => { e.currentTarget.style.borderColor = copied ? "#6BCB77" : "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
-          onTouchStart={e => { if (!copied) { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; } }}
-          onTouchEnd={e => { e.currentTarget.style.borderColor = copied ? "#6BCB77" : "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
-          onTouchCancel={e => { e.currentTarget.style.borderColor = copied ? "#6BCB77" : "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
-        >{copied ? "Copied!" : "Send to someone"}</button>
+          onTouchStart={e => { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; }}
+          onTouchEnd={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+          onTouchCancel={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+        >Send to someone</button>}
       </div>
 
       {/* ===== GAPS LINK + DIALOG ===== */}
