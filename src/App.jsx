@@ -9,7 +9,7 @@ const QUESTIONS = [
   { question: "Could they access your phone?", weakInsight: "Your phone and everything on it would be locked." },
   { question: "Could they access your email?", weakInsight: "Your email — and every account tied to it — would be inaccessible." },
   { question: "Could they access your computer?", weakInsight: "Your computer and its files would be locked." },
-  { question: "Would they know which subscriptions and services to cancel?", weakInsight: "Subscriptions and services would keep charging with no one to cancel them." },
+  { question: "Could they access your saved photos and documents?", weakInsight: "Your photos and documents could be lost forever." },
   { question: "Would they know about all your investment or retirement accounts?", weakInsight: "Investment or retirement accounts could go unnoticed." },
   { question: "Have you told someone specific where to find the important stuff?", weakInsight: "No one has been told what to do or where to look." },
   { question: "Is any of this written down somewhere your family could find?", weakInsight: "Nothing is written down — it all disappears with you." },
