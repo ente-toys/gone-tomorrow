@@ -380,7 +380,7 @@ function Results({ scores, onRetake }) {
           color: "#9A9590",
           margin: "0 0 16px",
           lineHeight: 1.45,
-        }}>Could your family access your important documents and credentials without you?</p>
+        }}>Could your family find what they need without you?</p>
 
         {/* Score */}
         <p style={{
