@@ -254,6 +254,7 @@ function Results({ scores, onRetake }) {
   const [sharing, setSharing] = useState(false);
   const [sending, setSending] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [gapsOpen, setGapsOpen] = useState(false);
 
   const renderCard = async () => {
     const canvas = await html2canvas(cardRef.current, {
@@ -390,32 +391,6 @@ function Results({ scores, onRetake }) {
           lineHeight: 1.5,
         }}>{tier.desc}</p>
 
-        {/* Gaps breakdown (inside card for PNG) */}
-        {weakQs.length > 0 && (
-          <div style={{
-            borderTop: "1px solid #2A2A2A",
-            paddingTop: 16,
-            textAlign: "left",
-          }}>
-            <p style={{
-              fontSize: 11,
-              letterSpacing: 1.5,
-              textTransform: "uppercase",
-              color: "#6A6560",
-              margin: "0 0 12px",
-            }}>Where the gaps are</p>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {weakQs.map(qi => (
-                <div key={qi} style={{ display: "flex", gap: 10, alignItems: "baseline" }}>
-                  <span style={{ color: tier.color, fontSize: 8, marginTop: 4 }}>●</span>
-                  <span style={{ fontSize: 13, color: "#D5D0CB", lineHeight: 1.4 }}>{QUESTIONS[qi].weakInsight}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Card footer */}
         <div style={{
           display: "flex",
@@ -456,6 +431,97 @@ function Results({ scores, onRetake }) {
           opacity: sending ? 0.8 : 1,
         }}>{copied ? "Copied!" : sending ? "Generating..." : "Send to someone"}</button>
       </div>
+
+      {/* ===== GAPS LINK + DIALOG ===== */}
+      {weakQs.length > 0 && (
+        <>
+          <button
+            onClick={() => setGapsOpen(true)}
+            style={{
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: 13,
+              color: "#5A5550",
+              marginTop: 14,
+              padding: 0,
+            }}
+            onMouseEnter={e => e.target.style.color = "#9A9590"}
+            onMouseLeave={e => e.target.style.color = "#5A5550"}
+          >See where the gaps are</button>
+
+          {gapsOpen && (
+            <div
+              onClick={() => setGapsOpen(false)}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.7)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 1000,
+                padding: 20,
+              }}
+            >
+              <div
+                onClick={e => e.stopPropagation()}
+                style={{
+                  background: "#1A1A1A",
+                  border: "1px solid #2A2A2A",
+                  borderRadius: 12,
+                  padding: "20px 20px",
+                  width: "100%",
+                  maxWidth: 400,
+                }}
+              >
+                <div style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  marginBottom: 14,
+                }}>
+                  <p style={{
+                    fontFamily: "'Outfit', sans-serif",
+                    fontSize: 11,
+                    letterSpacing: 2,
+                    textTransform: "uppercase",
+                    color: "#6A6560",
+                    margin: 0,
+                  }}>Where the gaps are</p>
+                  <button
+                    onClick={() => setGapsOpen(false)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#6A6560",
+                      fontSize: 18,
+                      cursor: "pointer",
+                      padding: 0,
+                      lineHeight: 1,
+                    }}
+                  >×</button>
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {weakQs.map(qi => (
+                    <div key={qi} style={{ display: "flex", gap: 8, alignItems: "baseline" }}>
+                      <span style={{ color: tier.color, fontSize: 8, flexShrink: 0, marginTop: 4 }}>●</span>
+                      <span style={{
+                        fontFamily: "'Outfit', sans-serif",
+                        fontSize: 14,
+                        color: "#D5D0CB",
+                        lineHeight: 1.4,
+                      }}>{QUESTIONS[qi].weakInsight}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}
 
       {/* ===== WHY WE BUILT THIS (never in PNG) ===== */}
       <div style={{
