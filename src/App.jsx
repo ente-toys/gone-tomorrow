@@ -333,7 +333,7 @@ function Results({ scores, onRetake }) {
   return (
     <div style={{
       minHeight: "100dvh", display: "flex", flexDirection: "column",
-      alignItems: "center", padding: "40px 20px",
+      alignItems: "center", justifyContent: "center", padding: "40px 20px",
       fontFamily: "'Outfit', sans-serif",
       opacity: visible ? 1 : 0, transition: "opacity 0.5s ease",
     }}>
