@@ -2,15 +2,15 @@ import { useState, useEffect, useRef } from "react";
 import html2canvas from "html2canvas";
 
 const QUESTIONS = [
-  { question: "Could your family log into your bank accounts and pay next month's rent?", weakInsight: "Your family could lose access to money when they need it most." },
-  { question: "Would they know about all your debts — loans, credit cards, anything owed?", weakInsight: "Debts they don't know about could spiral." },
-  { question: "Could they find your insurance policies?", weakInsight: "Critical insurance policies may be unfindable." },
-  { question: "Do they know where your will is?", weakInsight: "Your family wouldn't know where your will is — or if one exists." },
-  { question: "Could they access your phone?", weakInsight: "Your phone and everything on it would be locked." },
+  { question: "Could your family access your phone?", weakInsight: "Your phone and everything on it would be locked." },
   { question: "Could they access your email?", weakInsight: "Your email — and every account tied to it — would be inaccessible." },
   { question: "Could they access your computer?", weakInsight: "Your computer and its files would be locked." },
   { question: "Could they access your saved photos and documents?", weakInsight: "Your photos and documents could be lost forever." },
+  { question: "Could your family log into your bank accounts and pay next month's rent?", weakInsight: "Your family could lose access to money when they need it most." },
+  { question: "Could they find your insurance policies?", weakInsight: "Critical insurance policies may be unfindable." },
+  { question: "Would they know about all your debts — loans, credit cards, anything owed?", weakInsight: "Debts they don't know about could spiral." },
   { question: "Would they know about all your investment or retirement accounts?", weakInsight: "Investment or retirement accounts could go unnoticed." },
+  { question: "Do they know where your will is?", weakInsight: "Your family wouldn't know where your will is — or if one exists." },
   { question: "Have you told someone specific where to find the important stuff?", weakInsight: "No one has been told what to do or where to look." },
   { question: "Is any of this written down somewhere your family could find?", weakInsight: "Nothing is written down — it all disappears with you." },
   { question: "Have you actually had the conversation — what to do if something happens to you?", weakInsight: "The most important conversation hasn't happened yet." },
