@@ -570,7 +570,8 @@ function Results({ scores, onRetake }) {
           color: "#5A5550",
           cursor: "pointer",
           fontFamily: "'Outfit', sans-serif",
-        }}>↻ Retake the test</button>
+          textDecoration: "underline",
+        }}>Retake the test</button>
       </div>
     </div>
   );
