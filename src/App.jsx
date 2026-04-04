@@ -457,7 +457,7 @@ function Results({ scores, onRetake }) {
         }}>{copied ? "Copied!" : sending ? "Generating..." : "Send to someone"}</button>
       </div>
 
-      {/* ===== ENTE NUDGE (never in PNG) ===== */}
+      {/* ===== WHY WE BUILT THIS (never in PNG) ===== */}
       <div style={{
         marginTop: 32,
         paddingTop: 24,
@@ -473,31 +473,24 @@ function Results({ scores, onRetake }) {
           lineHeight: 1.4,
           textAlign: "center",
         }}>
-          What if someone you trust could access everything — but only if something happened to you?
+          Why we built this
         </p>
         <p style={{
           fontSize: 13,
-          color: "#6A6560",
+          color: "#9A9590",
           textAlign: "center",
-          margin: "0 0 16px",
+          margin: 0,
           lineHeight: 1.5,
         }}>
-          End-to-end encrypted storage with a built-in safety net for the people you'd leave behind.
-        </p>
-        <div style={{ textAlign: "center" }}>
+          We kept hearing the same story — someone passes away and their family spends months just trying to find the passwords, the policies, the paperwork. It shouldn't be that way. So we built{" "}
           <a
             href="https://ente.com/locker/?ref=gonetomorrow"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              fontSize: 13,
-              color: "#E8A838",
-              textDecoration: "none",
-              borderBottom: "1px solid rgba(232,168,56,0.3)",
-              paddingBottom: 1,
-            }}
-          >See how it works →</a>
-        </div>
+            style={{ color: "#D5D0CB", textDecoration: "none" }}
+          >Ente Locker</a>
+          {" "}— a safe space for your most important documents, with a way to pass them on automatically in an emergency.
+        </p>
       </div>
 
       {/* ===== RETAKE ===== */}
