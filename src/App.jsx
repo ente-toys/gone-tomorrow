@@ -240,8 +240,16 @@ function Results({ scores, onRetake }) {
   const weakQs = scores.map((s, i) => s === 0 ? i : -1).filter(i => i >= 0);
   const [visible, setVisible] = useState(false);
   const cardRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia("(max-width: 768px)").matches);
 
   useEffect(() => { requestAnimationFrame(() => setVisible(true)); }, []);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const onChange = (e) => setIsMobile(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const [sharing, setSharing] = useState(false);
   const [sending, setSending] = useState(false);
@@ -261,22 +269,29 @@ function Results({ scores, onRetake }) {
     setSharing(true);
     try {
       const blob = await renderCard();
-      const file = new File([blob], "gone-tomorrow-score.png", { type: "image/png" });
-
-      if (navigator.share && navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file] });
+      if (isMobile) {
+        const file = new File([blob], "gone-tomorrow-score.png", { type: "image/png" });
+        if (navigator.share && navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file] });
+        } else {
+          downloadBlob(blob);
+        }
       } else {
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "gone-tomorrow-score.png";
-        link.click();
-        URL.revokeObjectURL(link.href);
+        downloadBlob(blob);
       }
     } catch (e) {
       if (e.name !== "AbortError") console.error("Share failed:", e);
     } finally {
       setSharing(false);
     }
+  };
+
+  const downloadBlob = (blob) => {
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "gone-tomorrow-score.png";
+    link.click();
+    URL.revokeObjectURL(link.href);
   };
 
   const handleSend = async () => {
@@ -377,37 +392,47 @@ function Results({ scores, onRetake }) {
         </div>
 
         {/* ===== SHARE BUTTONS ===== */}
-        <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+        {isMobile ? (
+          <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
+            <button onClick={handleShare} disabled={sharing} style={{
+              fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
+              color: "#1A1A1A", background: sharing ? "#C49030" : "#E8A838",
+              border: "none", padding: "14px 24px", borderRadius: 10,
+              cursor: sharing ? "wait" : "pointer", flex: 1,
+              transition: "background 0.2s, transform 0.1s",
+              opacity: sharing ? 0.8 : 1,
+            }}
+              onTouchStart={e => e.target.style.transform = "scale(0.98)"}
+              onTouchEnd={e => e.target.style.transform = "scale(1)"}
+            >{sharing ? "Generating..." : "Share card"}</button>
+
+            <button onClick={handleSend} disabled={sending} style={{
+              fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
+              color: copied ? "#6BCB77" : "#E8A838",
+              background: "transparent",
+              border: `1.5px solid ${copied ? "#6BCB77" : "#E8A838"}`,
+              padding: "14px 24px", borderRadius: 10,
+              cursor: sending ? "wait" : "pointer", flex: 1,
+              transition: "all 0.2s, transform 0.1s",
+              opacity: sending ? 0.8 : 1,
+            }}
+              onTouchStart={e => e.target.style.transform = "scale(0.98)"}
+              onTouchEnd={e => e.target.style.transform = "scale(1)"}
+            >{copied ? "Copied!" : sending ? "Generating..." : "Send to someone"}</button>
+          </div>
+        ) : (
           <button onClick={handleShare} disabled={sharing} style={{
             fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
             color: "#1A1A1A", background: sharing ? "#C49030" : "#E8A838",
             border: "none", padding: "14px 24px", borderRadius: 10,
-            cursor: sharing ? "wait" : "pointer", flex: 1,
+            cursor: sharing ? "wait" : "pointer", width: "100%", marginTop: 20,
             transition: "background 0.2s, transform 0.1s",
             opacity: sharing ? 0.8 : 1,
           }}
             onMouseEnter={e => { if (!sharing) e.target.style.background = "#F0B848"; }}
             onMouseLeave={e => { if (!sharing) e.target.style.background = "#E8A838"; }}
-            onTouchStart={e => e.target.style.transform = "scale(0.98)"}
-            onTouchEnd={e => e.target.style.transform = "scale(1)"}
-          >{sharing ? "Generating..." : "Share card"}</button>
-
-          <button onClick={handleSend} disabled={sending} style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
-            color: copied ? "#6BCB77" : "#E8A838",
-            background: "transparent",
-            border: `1.5px solid ${copied ? "#6BCB77" : "#E8A838"}`,
-            padding: "14px 24px", borderRadius: 10,
-            cursor: sending ? "wait" : "pointer", flex: 1,
-            transition: "all 0.2s, transform 0.1s",
-            opacity: sending ? 0.8 : 1,
-          }}
-            onMouseEnter={e => { if (!sending && !copied) { e.target.style.background = "rgba(232,168,56,0.1)"; } }}
-            onMouseLeave={e => { if (!sending) e.target.style.background = "transparent"; }}
-            onTouchStart={e => e.target.style.transform = "scale(0.98)"}
-            onTouchEnd={e => e.target.style.transform = "scale(1)"}
-          >{copied ? "Copied!" : sending ? "Generating..." : "Send to someone"}</button>
-        </div>
+          >{sharing ? "Generating..." : "Download card"}</button>
+        )}
 
         {/* ===== BREAKDOWN ===== */}
         {weakQs.length > 0 ? (
