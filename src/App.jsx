@@ -369,7 +369,7 @@ function Results({ scores, onRetake }) {
       }}>
         {/* Card header */}
         <p style={{
-          fontSize: 11,
+          fontSize: 14,
           letterSpacing: 2.5,
           textTransform: "uppercase",
           color: "#6A6560",
@@ -417,7 +417,7 @@ function Results({ scores, onRetake }) {
           borderTop: "1px solid #2A2A2A",
           textAlign: "center",
         }}>
-          <span style={{ fontSize: 11, color: "#5A5550" }}>gonetomorrow.fyi</span>
+          <span style={{ fontSize: 14, color: "#5A5550" }}>gonetomorrow.fyi</span>
         </div>
       </div>
 
