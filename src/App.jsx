@@ -432,15 +432,27 @@ function Results({ scores, onRetake }) {
         <button onClick={handleShare} disabled={sharing} style={{
           ...shareBtnStyle,
           cursor: sharing ? "wait" : "pointer",
-          opacity: sharing ? 0.8 : 1,
-        }}>{sharing ? "Generating..." : "Share card"}</button>
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+        }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+          onTouchStart={e => { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; }}
+          onTouchEnd={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+          onTouchCancel={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+        >{sharing && <span style={{ width: 14, height: 14, border: "2px solid #3A3A3A", borderTopColor: "#F5F0EB", borderRadius: "50%", animation: "spin 0.6s linear infinite, fadeIn 0.2s ease", flexShrink: 0 }} />}Share card</button>
         <button onClick={handleSend} disabled={sending} style={{
           ...shareBtnStyle,
           color: copied ? "#6BCB77" : "#F5F0EB",
           borderColor: copied ? "#6BCB77" : "#2A2A2A",
           cursor: sending ? "wait" : "pointer",
-          opacity: sending ? 0.8 : 1,
-        }}>{copied ? "Copied!" : sending ? "Generating..." : "Send to someone"}</button>
+          display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+        }}
+          onMouseEnter={e => { if (!copied) { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; } }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = copied ? "#6BCB77" : "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+          onTouchStart={e => { if (!copied) { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; } }}
+          onTouchEnd={e => { e.currentTarget.style.borderColor = copied ? "#6BCB77" : "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+          onTouchCancel={e => { e.currentTarget.style.borderColor = copied ? "#6BCB77" : "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+        >{sending && <span style={{ width: 14, height: 14, border: "2px solid #3A3A3A", borderTopColor: "#F5F0EB", borderRadius: "50%", animation: "spin 0.6s linear infinite, fadeIn 0.2s ease", flexShrink: 0 }} />}{copied ? "Copied!" : "Send to someone"}</button>
       </div>
 
       {/* ===== GAPS LINK + DIALOG ===== */}
@@ -610,6 +622,8 @@ export default function GoneTomorrow() {
       <style>{FONTS_CSS}{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: #0F0F0F; -webkit-font-smoothing: antialiased; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       `}</style>
       <div style={{ background: "#0F0F0F", minHeight: "100dvh", color: "#F5F0EB" }}>
         {screen === "landing" && <Landing onStart={startQuiz} />}
