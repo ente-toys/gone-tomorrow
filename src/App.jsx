@@ -342,7 +342,7 @@ function Results({ scores, onRetake }) {
           {/* Score */}
           <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
             <span style={{
-              fontFamily: "'Playfair Display', serif", fontSize: "clamp(72px, 18vw, 96px)", fontWeight: 700,
+              fontFamily: "'Outfit', sans-serif", fontSize: "clamp(56px, 14vw, 72px)", fontWeight: 700,
               color: tier.color, lineHeight: 1,
             }}>{total}</span>
             <span style={{
