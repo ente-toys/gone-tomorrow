@@ -552,14 +552,19 @@ function Results({ scores, onRetake }) {
           margin: 0,
           lineHeight: 1.5,
         }}>
-          We kept hearing the same story — someone passes away and their family spends months just trying to find the passwords, the policies, the paperwork. It shouldn't be that way. So we built{" "}
+          We kept hearing the same story — someone passes away and their family spends months just trying to find the passwords, the policies, the paperwork. It shouldn't be that way. So we built Ente Locker — a safe space for your most important documents, with a way to pass them on automatically in an emergency.
+        </p>
+        <p style={{ textAlign: "center", margin: "12px 0 0", fontSize: 13 }}>
           <a
             href="https://ente.com/locker/?ref=gonetomorrow"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: "#D5D0CB", textDecoration: "none" }}
-          >Ente Locker</a>
-          {" "}— a safe space for your most important documents, with a way to pass them on automatically in an emergency.
+            style={{
+              color: "#F5F0EB",
+              textDecoration: "underline",
+              textUnderlineOffset: 3,
+            }}
+          >Try Ente Locker →</a>
         </p>
       </div>
 
