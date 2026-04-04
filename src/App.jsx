@@ -316,160 +316,200 @@ function Results({ scores, onRetake }) {
     }
   };
 
+  const shareBtnStyle = {
+    flex: 1,
+    background: "#1A1A1A",
+    border: "1px solid #2A2A2A",
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 14,
+    color: "#F5F0EB",
+    fontWeight: 500,
+    cursor: "pointer",
+    fontFamily: "'Outfit', sans-serif",
+  };
+
   return (
     <div style={{
       minHeight: "100dvh", display: "flex", flexDirection: "column",
-      justifyContent: "center", padding: "24px 16px 60px",
+      alignItems: "center", padding: "40px 20px",
+      fontFamily: "'Outfit', sans-serif",
       opacity: visible ? 1 : 0, transition: "opacity 0.5s ease",
     }}>
-      <div style={{ maxWidth: 480, margin: "0 auto", width: "100%" }}>
 
-        {/* ===== SCORE CARD ===== */}
-        <div ref={cardRef} style={{
-          background: "#1A1A1A", borderRadius: 16, padding: "24px 24px 16px",
-          border: "1px solid #2A2A2A",
+      {/* ===== SCORE CARD (html2canvas capture area) ===== */}
+      <div ref={cardRef} style={{
+        background: "#1A1A1A",
+        border: "1px solid #2A2A2A",
+        borderRadius: 12,
+        padding: "28px 24px 20px",
+        textAlign: "center",
+        width: "100%",
+        maxWidth: 400,
+      }}>
+        {/* Card header */}
+        <p style={{
+          fontSize: 11,
+          letterSpacing: 2.5,
+          textTransform: "uppercase",
+          color: "#6A6560",
+          margin: "0 0 6px",
+        }}>Gone Tomorrow</p>
+        <p style={{
+          fontSize: 13,
+          color: "#9A9590",
+          margin: "0 0 16px",
+          lineHeight: 1.45,
+        }}>Could your family access everything without you?</p>
+
+        {/* Score */}
+        <p style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 64,
+          fontWeight: 700,
+          color: tier.color,
+          margin: 0,
+          lineHeight: 1,
         }}>
-          <p style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 12, fontWeight: 600,
-            letterSpacing: "0.2em", textTransform: "uppercase", color: "#E8A838",
-            margin: "0 0 6px 0",
-          }}>Gone Tomorrow</p>
-          <p style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 400,
-            color: "#D5D0CB", margin: "0 0 14px 0", lineHeight: 1.45,
-          }}>Could your family access everything without you?</p>
+          {total}
+          <span style={{ fontSize: 28, color: "#6A6560", fontWeight: 400 }}>/12</span>
+        </p>
 
-          {/* Score */}
-          <div style={{ display: "flex", alignItems: "baseline", gap: 6, marginBottom: 6 }}>
-            <span style={{
-              fontFamily: "'Outfit', sans-serif", fontSize: "clamp(56px, 14vw, 72px)", fontWeight: 700,
-              color: tier.color, lineHeight: 1,
-            }}>{total}</span>
-            <span style={{
-              fontFamily: "'Outfit', sans-serif", fontSize: "clamp(24px, 5vw, 32px)", fontWeight: 300,
-              color: "#5A5550",
-            }}>/12</span>
-          </div>
+        {/* Tier label + description */}
+        <p style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 20,
+          color: "#F5F0EB",
+          margin: "12px 0 6px",
+          fontWeight: 600,
+        }}>{tier.label}</p>
+        <p style={{
+          fontSize: 13,
+          color: "#9A9590",
+          margin: "0 0 20px",
+          lineHeight: 1.5,
+        }}>{tier.desc}</p>
 
-          <p style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 18, fontWeight: 600,
-            color: tier.color, margin: "14px 0 4px 0",
-          }}>{tier.label}</p>
-          <p style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 14, color: "#9A9590",
-            margin: "0 0 14px 0", lineHeight: 1.5,
-          }}>{tier.desc}</p>
-
+        {/* Gaps breakdown (inside card for PNG) */}
+        {weakQs.length > 0 && (
           <div style={{
-            paddingTop: 12, marginTop: 0, borderTop: "1px solid #2A2A2A",
-            display: "flex", justifyContent: "space-between", alignItems: "center",
+            borderTop: "1px solid #2A2A2A",
+            paddingTop: 16,
+            textAlign: "left",
           }}>
-            <span style={{
-              fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 500,
-              color: "#E8A838", letterSpacing: "0.01em",
-            }}>gonetomorrow.fyi</span>
-            <a href="https://ente.com/locker/?ref=gonetomorrow" target="_blank" rel="noopener noreferrer"
-              style={{
-                fontFamily: "'Outfit', sans-serif", fontSize: 12, color: "#7A7570",
-                textDecoration: "none", letterSpacing: "0.03em",
-                transition: "color 0.2s ease",
-              }}
-              onMouseEnter={e => e.currentTarget.style.color = "#B0A8A0"}
-              onMouseLeave={e => e.currentTarget.style.color = "#7A7570"}
-            >Toy by <span style={{ fontWeight: 600 }}>Ente</span></a>
-          </div>
-        </div>
+            <p style={{
+              fontSize: 11,
+              letterSpacing: 1.5,
+              textTransform: "uppercase",
+              color: "#6A6560",
+              margin: "0 0 12px",
+            }}>Where the gaps are</p>
 
-        {/* ===== SHARE BUTTONS ===== */}
-        {isMobile ? (
-          <div style={{ display: "flex", gap: 12, marginTop: 20 }}>
-            <button onClick={handleShare} disabled={sharing} style={{
-              fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
-              color: "#1A1A1A", background: sharing ? "#C49030" : "#E8A838",
-              border: "none", padding: "14px 24px", borderRadius: 10,
-              cursor: sharing ? "wait" : "pointer", flex: 1,
-              transition: "background 0.2s, transform 0.1s",
-              opacity: sharing ? 0.8 : 1,
-            }}
-              onTouchStart={e => e.target.style.transform = "scale(0.98)"}
-              onTouchEnd={e => e.target.style.transform = "scale(1)"}
-            >{sharing ? "Generating..." : "Share card"}</button>
-
-            <button onClick={handleSend} disabled={sending} style={{
-              fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
-              color: copied ? "#6BCB77" : "#E8A838",
-              background: "transparent",
-              border: `1.5px solid ${copied ? "#6BCB77" : "#E8A838"}`,
-              padding: "14px 24px", borderRadius: 10,
-              cursor: sending ? "wait" : "pointer", flex: 1,
-              transition: "all 0.2s, transform 0.1s",
-              opacity: sending ? 0.8 : 1,
-            }}
-              onTouchStart={e => e.target.style.transform = "scale(0.98)"}
-              onTouchEnd={e => e.target.style.transform = "scale(1)"}
-            >{copied ? "Copied!" : sending ? "Generating..." : "Send to someone"}</button>
-          </div>
-        ) : (
-          <button onClick={handleShare} disabled={sharing} style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 15, fontWeight: 600,
-            color: "#1A1A1A", background: sharing ? "#C49030" : "#E8A838",
-            border: "none", padding: "14px 24px", borderRadius: 10,
-            cursor: sharing ? "wait" : "pointer", width: "100%", marginTop: 20,
-            transition: "background 0.2s, transform 0.1s",
-            opacity: sharing ? 0.8 : 1,
-          }}
-            onMouseEnter={e => { if (!sharing) e.target.style.background = "#F0B848"; }}
-            onMouseLeave={e => { if (!sharing) e.target.style.background = "#E8A838"; }}
-          >{sharing ? "Generating..." : "Download card"}</button>
-        )}
-
-        {/* ===== BREAKDOWN ===== */}
-        {weakQs.length > 0 ? (
-          <div style={{ marginTop: 36 }}>
-            <h3 style={{
-              fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 600,
-              color: "#F5F0EB", margin: "0 0 12px 0",
-            }}>Where the gaps are</h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {weakQs.map(qi => (
-                <div key={qi} style={{
-                  background: "#161616", border: "1px solid #222",
-                  borderRadius: 6, padding: "8px 12px",
-                  borderLeft: "3px solid #9A9590",
-                }}>
-                  <p style={{
-                    fontFamily: "'Outfit', sans-serif", fontSize: 13, color: "#D5D0CB",
-                    margin: 0, lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}>{QUESTIONS[qi].weakInsight}</p>
+                <div key={qi} style={{ display: "flex", gap: 10, alignItems: "baseline" }}>
+                  <span style={{ color: tier.color, fontSize: 8, marginTop: 4 }}>●</span>
+                  <span style={{ fontSize: 13, color: "#D5D0CB", lineHeight: 1.4 }}>{QUESTIONS[qi].weakInsight}</span>
                 </div>
               ))}
             </div>
           </div>
-        ) : (
-          <div style={{
-            marginTop: 36, background: "#161616", border: "1px solid #222",
-            borderRadius: 12, padding: "24px", borderLeft: "3px solid #9A9590",
-          }}>
-            <p style={{
-              fontFamily: "'Outfit', sans-serif", fontSize: 15, color: "#D5D0CB",
-              margin: 0, lineHeight: 1.6,
-            }}>
-              You've done the work most people haven't. Your family would have access,
-              information, and a clear path forward. That's rare — and it matters.
-            </p>
-          </div>
         )}
 
-        {/* ===== RETAKE ===== */}
-        <div style={{ textAlign: "center", marginTop: 28 }}>
-          <button onClick={onRetake} style={{
-            fontFamily: "'Outfit', sans-serif", fontSize: 14, fontWeight: 400,
-            color: "#6A6560", background: "transparent", border: "none",
-            padding: "10px 12px", cursor: "pointer", textDecoration: "underline",
-            textUnderlineOffset: 3,
-          }}>Retake</button>
+        {/* Card footer */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginTop: 20,
+          paddingTop: 14,
+          borderTop: "1px solid #2A2A2A",
+        }}>
+          <span style={{ fontSize: 11, color: "#5A5550" }}>gonetomorrow.fyi</span>
+          <a
+            href="https://ente.com/locker/?ref=gonetomorrow"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontSize: 11, color: "#5A5550", textDecoration: "none" }}
+          >Toy by Ente</a>
         </div>
+      </div>
+
+      {/* ===== SHARE BUTTONS ===== */}
+      <div style={{
+        display: "flex",
+        gap: 10,
+        marginTop: 16,
+        width: "100%",
+        maxWidth: 400,
+      }}>
+        <button onClick={handleShare} disabled={sharing} style={{
+          ...shareBtnStyle,
+          cursor: sharing ? "wait" : "pointer",
+          opacity: sharing ? 0.8 : 1,
+        }}>{sharing ? "Generating..." : "Share card"}</button>
+        <button onClick={handleSend} disabled={sending} style={{
+          ...shareBtnStyle,
+          color: copied ? "#6BCB77" : "#F5F0EB",
+          borderColor: copied ? "#6BCB77" : "#2A2A2A",
+          cursor: sending ? "wait" : "pointer",
+          opacity: sending ? 0.8 : 1,
+        }}>{copied ? "Copied!" : sending ? "Generating..." : "Send to someone"}</button>
+      </div>
+
+      {/* ===== ENTE NUDGE (never in PNG) ===== */}
+      <div style={{
+        marginTop: 32,
+        paddingTop: 24,
+        borderTop: "1px solid #1A1A1A",
+        width: "100%",
+        maxWidth: 400,
+      }}>
+        <p style={{
+          fontFamily: "'Playfair Display', serif",
+          fontSize: 18,
+          color: "#F5F0EB",
+          margin: "0 0 8px",
+          lineHeight: 1.4,
+          textAlign: "center",
+        }}>
+          What if someone you trust could access everything — but only if something happened to you?
+        </p>
+        <p style={{
+          fontSize: 13,
+          color: "#6A6560",
+          textAlign: "center",
+          margin: "0 0 16px",
+          lineHeight: 1.5,
+        }}>
+          End-to-end encrypted storage with a built-in safety net for the people you'd leave behind.
+        </p>
+        <div style={{ textAlign: "center" }}>
+          <a
+            href="https://ente.com/locker/?ref=gonetomorrow"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontSize: 13,
+              color: "#E8A838",
+              textDecoration: "none",
+              borderBottom: "1px solid rgba(232,168,56,0.3)",
+              paddingBottom: 1,
+            }}
+          >See how it works →</a>
+        </div>
+      </div>
+
+      {/* ===== RETAKE ===== */}
+      <div style={{ textAlign: "center", marginTop: 32 }}>
+        <button onClick={onRetake} style={{
+          background: "none",
+          border: "none",
+          fontSize: 13,
+          color: "#5A5550",
+          cursor: "pointer",
+          fontFamily: "'Outfit', sans-serif",
+        }}>↻ Retake the test</button>
       </div>
     </div>
   );
