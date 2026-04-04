@@ -272,6 +272,8 @@ function Results({ scores, onRetake }) {
 
   const [sharing, setSharing] = useState(false);
   const [sending, setSending] = useState(false);
+  const [showShareLoader, setShowShareLoader] = useState(false);
+  const shareTimerRef = useRef(null);
   const [copied, setCopied] = useState(false);
   const [gapsOpen, setGapsOpen] = useState(false);
 
@@ -287,6 +289,7 @@ function Results({ scores, onRetake }) {
   const handleShare = async () => {
     if (!cardRef.current || sharing) return;
     setSharing(true);
+    shareTimerRef.current = setTimeout(() => setShowShareLoader(true), 700);
     try {
       const blob = await renderCard();
       if (isMobile) {
@@ -302,7 +305,9 @@ function Results({ scores, onRetake }) {
     } catch (e) {
       if (e.name !== "AbortError") console.error("Share failed:", e);
     } finally {
+      clearTimeout(shareTimerRef.current);
       setSharing(false);
+      setShowShareLoader(false);
     }
   };
 
@@ -439,7 +444,7 @@ function Results({ scores, onRetake }) {
           onTouchStart={e => { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; }}
           onTouchEnd={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
           onTouchCancel={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
-        >{sharing && <span style={{ width: 14, height: 14, border: "2px solid #3A3A3A", borderTopColor: "#F5F0EB", borderRadius: "50%", animation: "spin 0.6s linear infinite, fadeIn 0.2s ease", flexShrink: 0 }} />}Share card</button>
+        >{showShareLoader && <svg width="16" height="16" viewBox="0 0 50 50" style={{ animation: "md-rotate 1.4s linear infinite, fadeIn 0.2s ease", flexShrink: 0 }}><circle cx="25" cy="25" r="20" fill="none" stroke="#F5F0EB" strokeWidth="4" strokeLinecap="round" style={{ animation: "md-dash 1.4s ease-in-out infinite" }} /></svg>}Share card</button>
         <button onClick={handleSend} disabled={sending} style={{
           ...shareBtnStyle,
           color: copied ? "#6BCB77" : "#F5F0EB",
@@ -452,7 +457,7 @@ function Results({ scores, onRetake }) {
           onTouchStart={e => { if (!copied) { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; } }}
           onTouchEnd={e => { e.currentTarget.style.borderColor = copied ? "#6BCB77" : "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
           onTouchCancel={e => { e.currentTarget.style.borderColor = copied ? "#6BCB77" : "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
-        >{sending && <span style={{ width: 14, height: 14, border: "2px solid #3A3A3A", borderTopColor: "#F5F0EB", borderRadius: "50%", animation: "spin 0.6s linear infinite, fadeIn 0.2s ease", flexShrink: 0 }} />}{copied ? "Copied!" : "Send to someone"}</button>
+        >{copied ? "Copied!" : "Send to someone"}</button>
       </div>
 
       {/* ===== GAPS LINK + DIALOG ===== */}
@@ -622,7 +627,8 @@ export default function GoneTomorrow() {
       <style>{FONTS_CSS}{`
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: #0F0F0F; -webkit-font-smoothing: antialiased; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes md-rotate { to { transform: rotate(360deg); } }
+        @keyframes md-dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       `}</style>
       <div style={{ background: "#0F0F0F", minHeight: "100dvh", color: "#F5F0EB" }}>
