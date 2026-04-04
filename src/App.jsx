@@ -257,7 +257,7 @@ function Results({ scores, onRetake }) {
 
   const renderCard = async () => {
     const canvas = await html2canvas(cardRef.current, {
-      backgroundColor: "#0F0F0F",
+      backgroundColor: null,
       scale: 3,
       useCORS: true,
     });
