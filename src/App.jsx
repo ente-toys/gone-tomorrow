@@ -139,7 +139,7 @@ function Quiz({ onComplete }) {
   };
 
   const buttons = (
-    <div style={{ display: "flex", gap: 14 }}>
+    <div key={current} style={{ display: "flex", gap: 14 }}>
       <button onClick={() => handleAnswer(1)} style={btnStyle}
         onMouseEnter={e => { e.target.style.borderColor = "#3A3A3A"; e.target.style.background = "#222"; }}
         onMouseLeave={e => { e.target.style.borderColor = "#2A2A2A"; e.target.style.background = "#1A1A1A"; }}
