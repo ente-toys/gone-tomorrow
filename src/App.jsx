@@ -474,6 +474,8 @@ function Results({ scores, onRetake }) {
                   padding: "20px 20px",
                   width: "100%",
                   maxWidth: 400,
+                  maxHeight: "80dvh",
+                  overflowY: "auto",
                 }}
               >
                 <div style={{
