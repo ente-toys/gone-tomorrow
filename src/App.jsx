@@ -26,10 +26,10 @@ const QUESTIONS = [
 ];
 
 function getTier(score) {
-  if (score >= 11) return { label: "They'd be okay", color: "#6BCB77", desc: "Your family could carry on. You've done the work." };
-  if (score >= 8) return { label: "Some loose ends", color: "#E8A838", desc: "Most things are covered. A few gaps would hurt." };
-  if (score >= 4) return { label: "Too much in your head", color: "#E07A4A", desc: "Your family would figure it out — but it would take months." };
-  return { label: "They'd be starting over", color: "#D95555", desc: "Almost everything your family needs is locked in your head." };
+  if (score >= 11) return { label: "They'd know where to look", color: "#6BCB77", desc: "Everything's accessible. You've done the work." };
+  if (score >= 8) return { label: "They'd find most of it", color: "#E8A838", desc: "Most of it's covered. A few things only you know." };
+  if (score >= 4) return { label: "All in your head", color: "#E07A4A", desc: "Your family would be searching for things only you know." };
+  return { label: "They'd be starting over", color: "#D95555", desc: "Almost everything would be lost with you." };
 }
 
 function getShareCopy(score) {
