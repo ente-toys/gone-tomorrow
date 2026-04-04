@@ -83,6 +83,9 @@ function Landing({ onStart }) {
         }}
           onMouseEnter={e => { e.target.style.transform = "translateY(-1px)"; e.target.style.boxShadow = "0 4px 20px rgba(232,168,56,0.3)"; }}
           onMouseLeave={e => { e.target.style.transform = ""; e.target.style.boxShadow = ""; }}
+          onTouchStart={e => { e.currentTarget.style.transform = "translateY(-1px)"; e.currentTarget.style.boxShadow = "0 4px 20px rgba(232,168,56,0.3)"; }}
+          onTouchEnd={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
+          onTouchCancel={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
         >
           Take the Test
         </button>
@@ -143,10 +146,16 @@ function Quiz({ onComplete }) {
       <button onClick={() => handleAnswer(1)} style={btnStyle}
         onMouseEnter={e => { e.target.style.borderColor = "#3A3A3A"; e.target.style.background = "#222"; }}
         onMouseLeave={e => { e.target.style.borderColor = "#2A2A2A"; e.target.style.background = "#1A1A1A"; }}
+        onTouchStart={e => { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; }}
+        onTouchEnd={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+        onTouchCancel={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
       >Yes</button>
       <button onClick={() => handleAnswer(0)} style={btnStyle}
         onMouseEnter={e => { e.target.style.borderColor = "#3A3A3A"; e.target.style.background = "#222"; }}
         onMouseLeave={e => { e.target.style.borderColor = "#2A2A2A"; e.target.style.background = "#1A1A1A"; }}
+        onTouchStart={e => { e.currentTarget.style.borderColor = "#3A3A3A"; e.currentTarget.style.background = "#222"; }}
+        onTouchEnd={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
+        onTouchCancel={e => { e.currentTarget.style.borderColor = "#2A2A2A"; e.currentTarget.style.background = "#1A1A1A"; }}
       >Not really</button>
     </div>
   );
@@ -451,6 +460,9 @@ function Results({ scores, onRetake }) {
             }}
             onMouseEnter={e => e.target.style.color = "#9A9590"}
             onMouseLeave={e => e.target.style.color = "#5A5550"}
+            onTouchStart={e => e.currentTarget.style.color = "#9A9590"}
+            onTouchEnd={e => e.currentTarget.style.color = "#5A5550"}
+            onTouchCancel={e => e.currentTarget.style.color = "#5A5550"}
           >See where the gaps are</button>
 
           {gapsOpen && (
