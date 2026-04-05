@@ -89,10 +89,10 @@ function Landing({ onStart }) {
           position: "fixed", bottom: 24,
           textDecoration: "none", transition: "opacity 0.2s ease",
           display: "flex", alignItems: "center", gap: 6,
-          opacity: 0.5,
+          opacity: 0.7,
         }}
-        onMouseEnter={e => e.currentTarget.style.opacity = "0.7"}
-        onMouseLeave={e => e.currentTarget.style.opacity = "0.5"}
+        onMouseEnter={e => e.currentTarget.style.opacity = "0.9"}
+        onMouseLeave={e => e.currentTarget.style.opacity = "0.7"}
       ><span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: "#5A5550" }}>By</span> <EnteLogo height={12} /></a>
     </div>
   );
