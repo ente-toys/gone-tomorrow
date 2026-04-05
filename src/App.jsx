@@ -93,7 +93,7 @@ function Landing({ onStart }) {
         }}
         onMouseEnter={e => e.currentTarget.style.opacity = "0.8"}
         onMouseLeave={e => e.currentTarget.style.opacity = "0.6"}
-      ><span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: "#7A7570" }}>By</span> <EnteLogo height={13} color="#7A7570" /></a>
+      ><span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: "#7A7570", transform: "translateY(1px)" }}>By</span> <EnteLogo height={13} color="#7A7570" /></a>
     </div>
   );
 }
