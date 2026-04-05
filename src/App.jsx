@@ -103,7 +103,10 @@ function Quiz({ onComplete }) {
   const [current, setCurrent] = useState(0);
   const [scores, setScores] = useState([]);
   const [flash, setFlash] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.matchMedia("(max-width: 768px)").matches);
+
+  useEffect(() => { requestAnimationFrame(() => setVisible(true)); }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
@@ -159,6 +162,7 @@ function Quiz({ onComplete }) {
       <div style={{
         minHeight: "100dvh", display: "flex", flexDirection: "column",
         justifyContent: "center", padding: "40px 24px",
+        opacity: visible ? 1 : 0, transition: "opacity 0.2s ease",
       }}>
         <div style={{
           display: "flex", gap: 6, justifyContent: "center", marginBottom: 48, flexWrap: "wrap",
@@ -199,6 +203,7 @@ function Quiz({ onComplete }) {
     <div style={{
       minHeight: "100dvh", display: "flex", flexDirection: "column",
       padding: "40px 24px",
+      opacity: visible ? 1 : 0, transition: "opacity 0.5s ease",
     }}>
       <div style={{
         display: "flex", gap: 6, justifyContent: "center", flexWrap: "wrap",
@@ -604,10 +609,33 @@ function Results({ scores, onRetake }) {
 export default function GoneTomorrow() {
   const [screen, setScreen] = useState("landing"); // landing | quiz | results
   const [scores, setScores] = useState([]);
+  const [prevScreen, setPrevScreen] = useState(null);
+  const [fading, setFading] = useState(false);
 
-  const startQuiz = () => setScreen("quiz");
-  const finishQuiz = (s) => { setScores(s); setScreen("results"); window.scrollTo(0, 0); };
-  const retake = () => { setScores([]); setScreen("landing"); window.scrollTo(0, 0); };
+  const crossfade = (next, setup) => {
+    if (setup) setup();
+    setPrevScreen(screen);
+    setScreen(next);
+    setFading(true);
+    setTimeout(() => { setPrevScreen(null); setFading(false); }, 250);
+  };
+
+  const startQuiz = () => crossfade("quiz");
+  const finishQuiz = (s) => { crossfade("results", () => setScores(s)); window.scrollTo(0, 0); };
+  const retake = () => { crossfade("landing", () => setScores([])); window.scrollTo(0, 0); };
+
+  const renderScreen = (s, isFadingOut) => {
+    const style = isFadingOut
+      ? { gridArea: "1/1", opacity: 0, transition: "opacity 0.2s ease", pointerEvents: "none" }
+      : { gridArea: "1/1" };
+    return (
+      <div key={s} style={style}>
+        {s === "landing" && <Landing onStart={startQuiz} />}
+        {s === "quiz" && <Quiz onComplete={finishQuiz} />}
+        {s === "results" && <Results scores={scores} onRetake={retake} />}
+      </div>
+    );
+  };
 
   return (
     <>
@@ -615,10 +643,9 @@ export default function GoneTomorrow() {
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         body { background: #0F0F0F; -webkit-font-smoothing: antialiased; }
       `}</style>
-      <div style={{ background: "#0F0F0F", minHeight: "100dvh", color: "#F5F0EB" }}>
-        {screen === "landing" && <Landing onStart={startQuiz} />}
-        {screen === "quiz" && <Quiz onComplete={finishQuiz} />}
-        {screen === "results" && <Results scores={scores} onRetake={retake} />}
+      <div style={{ background: "#0F0F0F", minHeight: "100dvh", color: "#F5F0EB", display: "grid" }}>
+        {fading && prevScreen && renderScreen(prevScreen, true)}
+        {renderScreen(screen, false)}
       </div>
     </>
   );
