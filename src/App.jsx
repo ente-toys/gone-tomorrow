@@ -328,7 +328,7 @@ function Results({ scores, onRetake }) {
       const blob = await renderCard();
       const file = new File([blob], "gone-tomorrow.png", { type: "image/png" });
 
-      await navigator.share({ text: "check yours gonetomorrow.fyi", files: [file] });
+      await navigator.share({ text: "How prepared are you really? Just found out mine\ngonetomorrow.fyi", files: [file] });
     } catch (e) {
       if (e.name !== "AbortError") console.error("Send failed:", e);
     } finally {
