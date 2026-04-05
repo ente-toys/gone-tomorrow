@@ -15,7 +15,7 @@ const QUESTIONS = [
   { question: "Could they access your email?", weakInsight: "Your email — and every account tied to it — would be inaccessible." },
   { question: "Could they access your computer?", weakInsight: "Your computer and its files would be locked." },
   { question: "Could they access your saved photos and documents?", weakInsight: "Your photos and documents could be lost forever." },
-  { question: "Could your family log into your bank accounts and pay next month's rent?", weakInsight: "Your family could lose access to money when they need it most." },
+  { question: "Could your family log into your bank accounts and keep paying the bills?", weakInsight: "Your family could lose access to money when they need it most." },
   { question: "Could they find your insurance policies?", weakInsight: "Critical insurance policies may be unfindable." },
   { question: "Would they know about all your debts — loans, credit cards, anything owed?", weakInsight: "Debts they don't know about could spiral." },
   { question: "Would they know about all your investment or retirement accounts?", weakInsight: "Investment or retirement accounts could go unnoticed." },
