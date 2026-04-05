@@ -22,7 +22,7 @@ const QUESTIONS = [
   { question: "Do they know where your will is?", weakInsight: "Your family wouldn't know where your will is — or if one exists." },
   { question: "Have you told someone specific where to find the important stuff?", weakInsight: "No one has been told what to do or where to look." },
   { question: "Is any of this written down somewhere your family could find?", weakInsight: "Nothing is written down — it all disappears with you." },
-  { question: "Have you actually had the conversation — what to do if something happens to you?", weakInsight: "The most important conversation hasn't happened yet." },
+  { question: "Have you actually had the conversation — what to do if something happens to you?", weakInsight: "You haven't had the conversation about what to do if something happens to you." },
 ];
 
 function getTier(score) {
