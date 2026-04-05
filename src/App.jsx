@@ -266,6 +266,16 @@ function Results({ scores, onRetake }) {
   const [sharing, setSharing] = useState(false);
   const [sending, setSending] = useState(false);
   const [gapsOpen, setGapsOpen] = useState(false);
+  const [gapsVisible, setGapsVisible] = useState(false);
+
+  const openGaps = () => {
+    setGapsOpen(true);
+    requestAnimationFrame(() => requestAnimationFrame(() => setGapsVisible(true)));
+  };
+  const closeGaps = () => {
+    setGapsVisible(false);
+    setTimeout(() => setGapsOpen(false), 250);
+  };
 
   const renderCard = async () => {
     const canvas = await html2canvas(cardRef.current, {
@@ -438,7 +448,7 @@ function Results({ scores, onRetake }) {
       {weakQs.length > 0 && (
         <>
           <button
-            onClick={() => setGapsOpen(true)}
+            onClick={openGaps}
             style={{
               background: "none",
               border: "none",
@@ -458,16 +468,17 @@ function Results({ scores, onRetake }) {
 
           {gapsOpen && (
             <div
-              onClick={() => setGapsOpen(false)}
+              onClick={closeGaps}
               style={{
                 position: "fixed",
                 inset: 0,
-                background: "rgba(0,0,0,0.7)",
+                background: gapsVisible ? "rgba(0,0,0,0.7)" : "rgba(0,0,0,0)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 zIndex: 1000,
                 padding: 20,
+                transition: "background 0.25s ease",
               }}
             >
               <div
@@ -481,6 +492,9 @@ function Results({ scores, onRetake }) {
                   maxWidth: 400,
                   maxHeight: "80dvh",
                   overflowY: "auto",
+                  opacity: gapsVisible ? 1 : 0,
+                  transform: gapsVisible ? "scale(1) translateY(0)" : "scale(0.96) translateY(8px)",
+                  transition: "opacity 0.25s ease, transform 0.25s ease",
                 }}
               >
                 <div style={{
@@ -498,7 +512,7 @@ function Results({ scores, onRetake }) {
                     margin: 0,
                   }}>Where the gaps are</p>
                   <button
-                    onClick={() => setGapsOpen(false)}
+                    onClick={closeGaps}
                     style={{
                       background: "none",
                       border: "none",
