@@ -89,11 +89,11 @@ function Landing({ onStart }) {
           position: "fixed", bottom: 24,
           textDecoration: "none", transition: "opacity 0.2s ease",
           display: "flex", alignItems: "center", gap: 6,
-          opacity: 0.7,
+          opacity: 0.6,
         }}
-        onMouseEnter={e => e.currentTarget.style.opacity = "0.9"}
-        onMouseLeave={e => e.currentTarget.style.opacity = "0.7"}
-      ><span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 12, color: "#5A5550" }}>By</span> <EnteLogo height={12} /></a>
+        onMouseEnter={e => e.currentTarget.style.opacity = "0.8"}
+        onMouseLeave={e => e.currentTarget.style.opacity = "0.6"}
+      ><span style={{ fontFamily: "'Outfit', sans-serif", fontSize: 13, fontWeight: 600, color: "#7A7570" }}>By</span> <EnteLogo height={13} color="#7A7570" /></a>
     </div>
   );
 }
