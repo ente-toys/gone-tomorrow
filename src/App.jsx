@@ -105,7 +105,7 @@ function Landing({ onStart }) {
           fontFamily: "'Playfair Display', serif", fontSize: "clamp(28px, 7vw, 44px)",
           fontWeight: 600, lineHeight: 1.2, color: "#F5F0EB", margin: "0 0 24px 0",
         }}>
-          If something happened to you tomorrow, would your family know what to do?
+          If something happened to you, would your family know what to do?
         </h1>
 
         <p style={{
