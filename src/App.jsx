@@ -131,7 +131,7 @@ function Landing({ onStart }) {
         </button>
       </div>
 
-      <a href="https://ente.com/locker/?ref=gonetomorrow" target="_blank" rel="noopener"
+      <a href="https://ente.com/locker/" target="_blank" rel="noopener"
         style={{
           position: "fixed", bottom: 24,
           textDecoration: "none", transition: "opacity 0.2s ease",
@@ -624,7 +624,7 @@ function Results({ scores, onRetake }) {
         </p>
         <p style={{ textAlign: "center", margin: "12px 0 0", fontSize: 14 }}>
           <a
-            href="https://ente.com/locker/?ref=gonetomorrow"
+            href="https://ente.com/locker/"
             target="_blank"
             rel="noopener"
             style={{
