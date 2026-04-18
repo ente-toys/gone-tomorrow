@@ -25,6 +25,10 @@ const QUESTIONS = [
   { question: "Have you actually had the conversation — what to do if something happens to you?", weakInsight: "You haven't had the conversation about what to do if something happens to you." },
 ];
 
+const UA = typeof navigator !== "undefined" ? navigator.userAgent : "";
+const isFirefoxIOS = /FxiOS/.test(UA);
+const isFirefoxAndroid = /Firefox/.test(UA) && /Android/.test(UA);
+
 function getTier(score) {
   if (score >= 11) return { label: "They'd know where to look", color: "#6BCB77", desc: <>You've done the work. That's <span style={{ fontStyle: 'italic' }}>rare</span>.</> };
   if (score >= 8) return { label: "They'd find most of it", color: "#E8A838", desc: "Most of it's covered. A few things only you know." };
@@ -319,6 +323,7 @@ function Results({ scores, onRetake }) {
   const [sending, setSending] = useState(false);
   const [gapsOpen, setGapsOpen] = useState(false);
   const [gapsVisible, setGapsVisible] = useState(false);
+  const [toast, setToast] = useState(null);
 
   const openGaps = () => {
     setGapsOpen(true);
@@ -341,9 +346,14 @@ function Results({ scores, onRetake }) {
   const handleShare = async () => {
     if (!cardRef.current || sharing) return;
     setSharing(true);
+    // Firefox iOS blocks programmatic <a download> clicks; open a blank tab
+    // synchronously so the user-gesture survives the async renderCard await.
+    const ffIOSWindow = isFirefoxIOS ? window.open("", "_blank") : null;
     try {
       const blob = await renderCard();
-      if (isMobile) {
+      if (isFirefoxIOS) {
+        if (ffIOSWindow) ffIOSWindow.location.href = URL.createObjectURL(blob);
+      } else if (isMobile) {
         const file = new File([blob], "gone-tomorrow-score.png", { type: "image/png" });
         if (navigator.share && navigator.canShare?.({ files: [file] })) {
           await navigator.share({ files: [file] });
@@ -355,6 +365,7 @@ function Results({ scores, onRetake }) {
       }
     } catch (e) {
       if (e.name !== "AbortError") console.error("Share failed:", e);
+      if (ffIOSWindow) ffIOSWindow.close();
     } finally {
       setSharing(false);
     }
@@ -369,13 +380,24 @@ function Results({ scores, onRetake }) {
   };
 
   const handleSend = async () => {
-    if (!cardRef.current || sending) return;
+    if (sending) return;
     setSending(true);
+    const shareText = `Just scored ${total}/12. How prepared are you?\ngonetomorrow.fyi`;
     try {
+      if (isFirefoxIOS) {
+        await navigator.clipboard.writeText(shareText);
+        setToast("Copied, paste and send");
+        setTimeout(() => setToast(null), 2500);
+        return;
+      }
+      if (isFirefoxAndroid) {
+        await navigator.share({ text: shareText });
+        return;
+      }
+      if (!cardRef.current) return;
       const blob = await renderCard();
       const file = new File([blob], "gone-tomorrow.png", { type: "image/png" });
-
-      await navigator.share({ text: "How prepared are you? Just found out mine.\ngonetomorrow.fyi", files: [file] });
+      await navigator.share({ text: shareText, files: [file] });
     } catch (e) {
       if (e.name !== "AbortError") console.error("Send failed:", e);
     } finally {
@@ -648,6 +670,25 @@ function Results({ scores, onRetake }) {
           textDecoration: "underline",
         }}>Retake the test</button>
       </div>
+
+      {toast && (
+        <div style={{
+          position: "fixed",
+          bottom: "calc(24px + env(safe-area-inset-bottom, 0px))",
+          left: "50%",
+          transform: "translateX(-50%)",
+          background: "#1A1A1A",
+          border: "1px solid #2A2A2A",
+          borderRadius: 8,
+          padding: "10px 16px",
+          fontSize: 14,
+          color: "#F5F0EB",
+          fontFamily: "'Outfit', sans-serif",
+          zIndex: 2000,
+          pointerEvents: "none",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+        }}>{toast}</div>
+      )}
     </div>
   );
 }
